@@ -1,0 +1,65 @@
+{
+  "C:\\xampp\\htdocs\\Front-react-bostrap-vite\\api-front-serverless": {
+    "versionSfCore": null,
+    "versionFramework": "4.4.19",
+    "isWithinCompose": false,
+    "isCompose": false,
+    "composeOrgName": null,
+    "composeServiceName": null,
+    "servicePath": "C:\\xampp\\htdocs\\Front-react-bostrap-vite\\api-front-serverless",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "service": "serverless-cms",
+      "provider": {
+        "name": "aws",
+        "runtime": "nodejs14.x",
+        "apiGateway": {
+          "shouldStartNameWithService": true
+        }
+      },
+      "functions": {
+        "app": {
+          "handler": "server.handler",
+          "events": [
+            {
+              "http": {
+                "path": "sucursales",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "/{proxy+}",
+                "method": "ANY"
+              }
+            }
+          ]
+        }
+      },
+      "plugins": [
+        "serverless-offline"
+      ],
+      "custom": {
+        "serverless-offline": {
+          "port": 3000
+        }
+      }
+    },
+    "serviceRawFile": "service: serverless-cms\r\n\r\nprovider:\r\n  name: aws\r\n  runtime: nodejs14.x\r\n  apiGateway:\r\n    shouldStartNameWithService: true\r\n\r\nfunctions:\r\n  app:\r\n    handler: server.handler\r\n    events:\r\n      - http:\r\n          path: sucursales\r\n          method: get\r\n      - http:\r\n          path: /{proxy+}\r\n          method: ANY\r\n\r\nplugins:\r\n  - serverless-offline\r\n\r\ncustom:\r\n  serverless-offline:\r\n    port: 3000",
+    "command": [
+      "offline"
+    ],
+    "options": {},
+    "error": {
+      "message": "request to https://core.serverless.com/api/bff/ failed, reason: getaddrinfo ENOTFOUND core.serverless.com",
+      "stack": "Error: request to https://core.serverless.com/api/bff/ failed, reason: getaddrinfo ENOTFOUND core.serverless.com\n    at Authentication.getClientDataFromAccessKey (file:///C:/Users/pgonzaleze/.serverless/releases/4.4.19/package/dist/sf-core.js:688:17080)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Authentication.getAuthenticatedData (file:///C:/Users/pgonzaleze/.serverless/releases/4.4.19/package/dist/sf-core.js:688:3689)\n    at async Authentication.resolverAuthenticate (file:///C:/Users/pgonzaleze/.serverless/releases/4.4.19/package/dist/sf-core.js:688:20566)\n    at async _Meta.authenticate (file:///C:/Users/pgonzaleze/.serverless/releases/4.4.19/package/dist/sf-core.js:696:12154)\n    at async _Meta.authenticateAndResolve (file:///C:/Users/pgonzaleze/.serverless/releases/4.4.19/package/dist/sf-core.js:696:11738)\n    at async route (file:///C:/Users/pgonzaleze/.serverless/releases/4.4.19/package/dist/sf-core.js:1010:14685)\n    at async Object.run2 [as run] (file:///C:/Users/pgonzaleze/.serverless/releases/4.4.19/package/dist/sf-core.js:1010:15173)\n    at async run3 (file:///C:/Users/pgonzaleze/.serverless/releases/4.4.19/package/dist/sf-core.js:1010:16435)"
+    },
+    "machineId": "5a66a3d8f2e8260f5bacd31d53e02b6d",
+    "stage": "dev",
+    "serviceProviderAwsCfStackId": null,
+    "serviceProviderAwsCfStackCreated": null,
+    "serviceProviderAwsCfStackUpdated": null,
+    "serviceProviderAwsCfStackStatus": null,
+    "serviceProviderAwsCfStackOutputs": null
+  }
+}

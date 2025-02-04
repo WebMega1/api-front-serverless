@@ -1,0 +1,37 @@
+service: serverless-cms
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  apiGateway:
+    shouldStartNameWithService: true
+
+functions:
+  app:
+    handler: server.handler
+    events:
+      - http:
+          path: api/sucursales
+          method: get
+      - http:
+          path: api/bannerHero
+          method: get 
+      - http:
+          path: api/configuraciones/home/
+          method: get        
+      - http:
+          path: api/doblePack/{idSucursal}
+          method: get
+      - http:
+          path: api/triplePack/{idSucursal}
+          method: get    
+      - http:
+          path: /{proxy+}
+          method: ANY
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    port: 3000
