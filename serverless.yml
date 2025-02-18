@@ -24,7 +24,13 @@ functions:
           method: get
       - http:
           path: api/triplePack/{idSucursal}
-          method: get    
+          method: get   
+      - http:
+          path: api/bannerFooter/
+          method: get
+      - http:
+          path: api/fullConnected/
+          method: get           
       - http:
           path: /{proxy+}
           method: ANY

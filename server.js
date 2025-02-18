@@ -25,7 +25,8 @@ connection.connect((err) => {
 app.get('/api/sucursales', (req, res) => {
   const query = `SELECT idSucursal, sucursalName, status 
                   FROM sucursal   
-                  WHERE status = 1;`;
+                  WHERE status = 1
+                  ORDER BY sucursalName ASC`;
   connection.query(query, (err, results) => {
     if (err) {
       console.error('Error ejecutando la consulta:', err);
@@ -123,7 +124,35 @@ app.get('/api/triplePack/:idSucursal', (req, res) => {
   });
 });
 
+// Ruta para obtener los banners de avisos en el home
+app.get('/api/bannerFooter/', (req, res) => {
+  const query = `SELECT * FROM banners WHERE tipoBanner = 5 AND status = 1;`;
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      res.status(500).send('Error en el servidor configuraciones');
+      return;
+    }
+    res.json(results);
+  });
+});
 
+// Ruta para obtener los banners de avisos en el home
+app.get('/api/fullConnected/', (req, res) => {
+  const query = `SELECT t1.idSucursal, t1.status, t2.sucursalName
+                FROM tarifario  as t1
+                LEFT JOIN sucursal as t2 on t1.idSucursal = t2.idSucursal
+                WHERE idTipoPaquete = 1  and t1.status = 1
+                ORDER BY sucursalName ASC;`;
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      res.status(500).send('Error en el servidor fullConnected');
+      return;
+    }
+    res.json(results);
+  });
+});
 
 
 // Exporta la aplicación para Serverless
