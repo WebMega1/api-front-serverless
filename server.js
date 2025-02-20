@@ -154,6 +154,31 @@ app.get('/api/fullConnected/', (req, res) => {
   });
 });
 
+// Ruta para obtener los banners de avisos en el home
+app.get('/api/cardStreaming/', (req, res) => {
+  const query = `SELECT * FROM cardsstreaming WHERE status = 1;`;
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      res.status(500).send('Error en el servidor fullConnected');
+      return;
+    }
+    res.json(results);
+  });
+});
+
+// Ruta para obtener los banners de avisos en el home
+app.get('/api/tv/', (req, res) => {
+  const query = `SELECT * FROM xviewsucursal;`;
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      res.status(500).send('Error en el servidor fullConnected');
+      return;
+    }
+    res.json(results);
+  });
+});
 
 // Exporta la aplicación para Serverless
 module.exports.handler = serverless(app);

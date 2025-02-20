@@ -30,7 +30,13 @@ functions:
           method: get
       - http:
           path: api/fullConnected/
-          method: get           
+          method: get    
+      - http:
+          path: api/cardStreaming/
+          method: get    
+      - http:
+          path: api/tv/
+          method: get    
       - http:
           path: /{proxy+}
           method: ANY
