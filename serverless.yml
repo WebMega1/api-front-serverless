@@ -36,6 +36,9 @@ functions:
           method: get    
       - http:
           path: api/tv/
+          method: get 
+      - http:
+          path: api/permisosSucursal/
           method: get    
       - http:
           path: /{proxy+}

@@ -23,7 +23,7 @@ connection.connect((err) => {
 
 // Ruta para obtener las sucursales
 app.get('/api/sucursales', (req, res) => {
-  const query = `SELECT idSucursal, sucursalName, status 
+  const query = `SELECT idSucursal, sucursalName, status, latitud, longitud 
                   FROM sucursal   
                   WHERE status = 1
                   ORDER BY sucursalName ASC`;
@@ -177,6 +177,20 @@ app.get('/api/tv/', (req, res) => {
       return;
     }
     res.json(results);
+  });
+});
+
+// Ruta GET para obtener datos de todas los canales en formato JSON
+app.get('/api/permisosSucursal/', (req, res) => {
+  const { objetoName, idObjeto, idSucursal } = req.query;
+  const query = 'SELECT * FROM permisosucursal WHERE objetoName = ? AND idObjeto = ? AND idSucursal = ?' ;
+  const values = [objetoName, idObjeto, idSucursal];
+
+  connection.query(query, values, (err, result) => {
+      if (err) {
+          return res.status(500).json({ error: 'Error al obtener permisos' });
+      }
+      res.json(result);
   });
 });
 
