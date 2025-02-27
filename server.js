@@ -183,16 +183,35 @@ app.get('/api/tv/', (req, res) => {
 // Ruta GET para obtener datos de todas los canales en formato JSON
 app.get('/api/permisosSucursal/', (req, res) => {
   const { objetoName, idObjeto, idSucursal } = req.query;
-  const query = 'SELECT * FROM permisosucursal WHERE objetoName = ? AND idObjeto = ? AND idSucursal = ?' ;
+  const query = 'SELECT * FROM permisosucursal WHERE objetoName = ? AND idObjeto = ? AND idSucursal = ?';
   const values = [objetoName, idObjeto, idSucursal];
 
   connection.query(query, values, (err, result) => {
-      if (err) {
-          return res.status(500).json({ error: 'Error al obtener permisos' });
-      }
-      res.json(result);
+    if (err) {
+      return res.status(500).json({ error: 'Error al obtener permisos' });
+    }
+    res.json(result);
   });
 });
+
+
+//Lambda hasta el 26-02-2025
+
+// Ruta para obtener los banners de avisos en el home
+app.get('/api/simetricoSucursal/', (req, res) => {
+  const query = `SELECT idSucursal, simetria FROM tarifario 
+                  WHERE simetria = 1
+                  GROUP BY idSucursal;`;
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      res.status(500).send('Error en el servidor fullConnected');
+      return;
+    }
+    res.json(results);
+  });
+});
+
 
 // Exporta la aplicación para Serverless
 module.exports.handler = serverless(app);
