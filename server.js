@@ -90,7 +90,7 @@ app.get('/api/doblePack/:idSucursal', (req, res) => {
                   LEFT JOIN tipodepaquete AS t3 on t1.idTipoPaquete = t3.idTipoPaquete 
                   LEFT JOIN serviciocable AS t4 on t1.idServicioCable = t4.idServicioCable 
                   LEFT JOIN banners AS t5 on t4.idBanner = t5.idBanner 
-                  WHERE t1.status = 1 AND t1.idSucursal = ? AND t3.idTipoPaquete = 3;`;
+                  WHERE t1.status = 1 AND t1.idSucursal = ? AND t3.idTipoPaquete = 2;`;
 
   connection.query(query, [idSucursal], (err, results) => {
     if (err) {
@@ -113,7 +113,7 @@ app.get('/api/triplePack/:idSucursal', (req, res) => {
                   LEFT JOIN tipodepaquete AS t3 on t1.idTipoPaquete = t3.idTipoPaquete 
                   LEFT JOIN serviciocable AS t4 on t1.idServicioCable = t4.idServicioCable 
                   LEFT JOIN banners AS t5 on t4.idBanner = t5.idBanner 
-                  WHERE t1.status = 1 AND t1.idSucursal = ? AND t3.idTipoPaquete = 2;`;
+                  WHERE t1.status = 1 AND t1.idSucursal = ? AND t3.idTipoPaquete = 3;`;
 
   connection.query(query, [idSucursal], (err, results) => {
     if (err) {
@@ -202,6 +202,25 @@ app.get('/api/simetricoSucursal/', (req, res) => {
   const query = `SELECT idSucursal, simetria FROM tarifario 
                   WHERE simetria = 1
                   GROUP BY idSucursal;`;
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      res.status(500).send('Error en el servidor fullConnected');
+      return;
+    }
+    res.json(results);
+  });
+});
+//nuevas 04-03-2025
+
+
+// Ruta para obtener los banners de trivias en el home
+app.get('/api/trivias/', (req, res) => {
+  const query = `SELECT t1.*, t2.ruta AS rutaPrincipal , t2.archivo AS archivoPrincipal, t3.ruta AS rutaMovil, t3.archivo AS archivoMovil 
+                FROM triviasconfig as t1
+                LEFT JOIN banners as t2 on t1.idBannerPrincipal = t2.idBanner
+                LEFT JOIN banners as t3 on t1.idBannerMovil = t3.idBanner
+                 WHERE t1.status = 1;`;
   connection.query(query, (err, results) => {
     if (err) {
       console.error('Error ejecutando la consulta:', err);

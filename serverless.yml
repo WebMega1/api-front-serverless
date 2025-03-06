@@ -42,7 +42,10 @@ functions:
           method: get   
       - http:
           path: api/simetricoSucursal/
-          method: get     
+          method: get 
+      - http:
+          path: api/trivias/
+          method: get        
       - http:
           path: /{proxy+}
           method: ANY
