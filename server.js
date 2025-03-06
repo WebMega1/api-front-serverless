@@ -81,16 +81,15 @@ app.get('/api/configuraciones/home/', (req, res) => {
 //Ruta para obtener los datos del tarifario cuando son card doblePack
 app.get('/api/doblePack/:idSucursal', (req, res) => {
   const { idSucursal } = req.params;
-  const query = `SELECT t1.idTarifario, t1.idSucursal, t1.idTipoPaquete, t1.idServicioCable, t1.fibraOptica, t1.velocidadInternet, 
-                  t1.telefonia, t1.precioPromoPaquete, t1.precioNormalPaquete, t1.simetria, t1.velocidadPromo, t1.tiempoVelocidaPromo, t1.tarifaPromocional, 
-                  t1.status, t1.created_at, t2.sucursalName, t3.nombreTipoPaquete, t3.tipoPaquete,IFNULL(t4.nameServicioCable,0) AS nameServicioCable, 
-                  t4.textoServicioCable, t5.ruta, t5.archivo 
+  const query = `SELECT t1.idTarifario, t1.idSucursal, t1.idTipoPaquete, t1.idServicioCable, t1.idTipoRed, t1.velocidadInternet, 
+                  t1.telefonia, t1.precioPromoPaquete, t1.precioNormalPaquete,  t1.velocidadPromo, t1.tiempoVelocidaPromo, t1.tarifaPromocional,  t1.status, t1.created_at, t2.sucursalName, t3.nombreTipoPaquete, t3.tipoPaquete,IFNULL(t4.nameServicioCable,0) AS nameServicioCable, 
+                  t4.textoServicioCable, t5.ruta, t5.archivo , t1.idContrata
                   FROM tarifario AS t1 
                   LEFT JOIN sucursal AS t2 on t1.idSucursal = t2.idSucursal 
                   LEFT JOIN tipodepaquete AS t3 on t1.idTipoPaquete = t3.idTipoPaquete 
                   LEFT JOIN serviciocable AS t4 on t1.idServicioCable = t4.idServicioCable 
-                  LEFT JOIN banners AS t5 on t4.idBanner = t5.idBanner 
-                  WHERE t1.status = 1 AND t1.idSucursal = ? AND t3.idTipoPaquete = 2;`;
+                  LEFT JOIN banners AS t5 on t4.idBanner = t5.idBanner
+             WHERE t1.status = 1 AND t3.tipoPaquete = 2 AND t1.idSucursal = ? ;`;
 
   connection.query(query, [idSucursal], (err, results) => {
     if (err) {
@@ -104,16 +103,15 @@ app.get('/api/doblePack/:idSucursal', (req, res) => {
 //Ruta para obtener los datos del tarifario cuando son card triplePack
 app.get('/api/triplePack/:idSucursal', (req, res) => {
   const { idSucursal } = req.params;
-  const query = `SELECT t1.idTarifario, t1.idSucursal, t1.idTipoPaquete, t1.idServicioCable, t1.fibraOptica, t1.velocidadInternet, 
-                  t1.telefonia, t1.precioPromoPaquete, t1.precioNormalPaquete, t1.simetria, t1.velocidadPromo, t1.tiempoVelocidaPromo, t1.tarifaPromocional, 
-                  t1.status, t1.created_at, t2.sucursalName, t3.nombreTipoPaquete, t3.tipoPaquete,IFNULL(t4.nameServicioCable,0) AS nameServicioCable, 
-                  t4.textoServicioCable, t5.ruta, t5.archivo 
+  const query = `SELECT t1.idTarifario, t1.idSucursal, t1.idTipoPaquete, t1.idServicioCable, t1.idTipoRed, t1.velocidadInternet, 
+                  t1.telefonia, t1.precioPromoPaquete, t1.precioNormalPaquete,  t1.velocidadPromo, t1.tiempoVelocidaPromo, t1.tarifaPromocional,  t1.status, t1.created_at, t2.sucursalName, t3.nombreTipoPaquete, t3.tipoPaquete,IFNULL(t4.nameServicioCable,0) AS nameServicioCable, 
+                  t4.textoServicioCable, t5.ruta, t5.archivo , t1.idContrata
                   FROM tarifario AS t1 
                   LEFT JOIN sucursal AS t2 on t1.idSucursal = t2.idSucursal 
                   LEFT JOIN tipodepaquete AS t3 on t1.idTipoPaquete = t3.idTipoPaquete 
                   LEFT JOIN serviciocable AS t4 on t1.idServicioCable = t4.idServicioCable 
-                  LEFT JOIN banners AS t5 on t4.idBanner = t5.idBanner 
-                  WHERE t1.status = 1 AND t1.idSucursal = ? AND t3.idTipoPaquete = 3;`;
+                  LEFT JOIN banners AS t5 on t4.idBanner = t5.idBanner
+             WHERE t1.status = 1 AND t3.tipoPaquete = 3 AND t1.idSucursal = ? ;`;
 
   connection.query(query, [idSucursal], (err, results) => {
     if (err) {
@@ -142,7 +140,7 @@ app.get('/api/fullConnected/', (req, res) => {
   const query = `SELECT t1.idSucursal, t1.status, t2.sucursalName
                 FROM tarifario  as t1
                 LEFT JOIN sucursal as t2 on t1.idSucursal = t2.idSucursal
-                WHERE idTipoPaquete = 1  and t1.status = 1
+                WHERE idTipoPaquete = 5  and t1.status = 1
                 ORDER BY sucursalName ASC;`;
   connection.query(query, (err, results) => {
     if (err) {
@@ -199,9 +197,7 @@ app.get('/api/permisosSucursal/', (req, res) => {
 
 // Ruta para obtener los banners de avisos en el home
 app.get('/api/simetricoSucursal/', (req, res) => {
-  const query = `SELECT idSucursal, simetria FROM tarifario 
-                  WHERE simetria = 1
-                  GROUP BY idSucursal;`;
+  const query = `SELECT idSucursal, 1 AS simetria FROM tarifario WHERE idTipoRed = 3 GROUP BY idSucursal; `;
   connection.query(query, (err, results) => {
     if (err) {
       console.error('Error ejecutando la consulta:', err);
