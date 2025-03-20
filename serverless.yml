@@ -45,7 +45,28 @@ functions:
           method: get 
       - http:
           path: api/trivias/
-          method: get        
+          method: get    
+      - http:
+          path: api/promoEspecialHome/
+          method: get    
+      - http:
+          path: api/xview/{idSucursal}
+          method: get 
+      - http:
+          path: api/extraPromoDisney/
+          method: get      
+      - http:
+          path: api/extraPromoNetflix/
+          method: get  
+      - http:
+          path: api/extraPromoAmazonPrime/
+          method: get  
+      - http:
+          path: api/triviaspreguntas/data/{id}
+          method: get    
+      - http:
+          path: api/trivias/data/{id}
+          method: get    
       - http:
           path: /{proxy+}
           method: ANY

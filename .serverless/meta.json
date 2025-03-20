@@ -61,5 +61,179 @@
     "serviceProviderAwsCfStackUpdated": null,
     "serviceProviderAwsCfStackStatus": null,
     "serviceProviderAwsCfStackOutputs": null
+  },
+  "C:\\xampp\\htdocs\\Front-react-bostrap-vite\\api-front-serverless\\serverless.yml": {
+    "versionFramework": "4.9.0",
+    "servicePath": "C:\\xampp\\htdocs\\Front-react-bostrap-vite\\api-front-serverless\\serverless.yml",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "service": "serverless-cms",
+      "provider": {
+        "name": "aws",
+        "runtime": "nodejs14.x",
+        "apiGateway": {
+          "shouldStartNameWithService": true
+        },
+        "stage": "dev",
+        "region": "us-east-1",
+        "versionFunctions": true
+      },
+      "functions": {
+        "app": {
+          "handler": "server.handler",
+          "events": [
+            {
+              "http": {
+                "path": "api/sucursales",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/bannerHero",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/configuraciones/home/",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/doblePack/{idSucursal}",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/triplePack/{idSucursal}",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/bannerFooter/",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/fullConnected/",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/cardStreaming/",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/tv/",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/permisosSucursal/",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/simetricoSucursal/",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/trivias/",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/promoEspecialHome/",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/xview/{idSucursal}",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/extraPromoDisney/",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "api/extraPromoDisney/",
+                "method": "get"
+              }
+            },
+            {
+              "http": {
+                "path": "/{proxy+}",
+                "method": "ANY"
+              }
+            }
+          ],
+          "name": "serverless-cms-dev-app"
+        }
+      },
+      "plugins": [
+        "serverless-offline"
+      ],
+      "custom": {
+        "serverless-offline": {
+          "port": 3000
+        }
+      }
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "nodejs14.x",
+      "apiGateway": {
+        "shouldStartNameWithService": true
+      },
+      "stage": "dev",
+      "region": "us-east-1",
+      "versionFunctions": true
+    },
+    "dashboard": {
+      "isEnabledForService": false,
+      "requiredAuthentication": false,
+      "orgFeaturesInUse": null,
+      "orgObservabilityIntegrations": null,
+      "serviceAppId": null,
+      "serviceProvider": null,
+      "instanceParameters": null
+    },
+    "error": {
+      "message": "New route /dev/api/extraPromoDisney conflicts with existing /dev/api/extraPromoDisney",
+      "stack": "AssertError: New route /dev/api/extraPromoDisney conflicts with existing /dev/api/extraPromoDisney\n    at internals.Segment.add (C:\\xampp\\htdocs\\Front-react-bostrap-vite\\api-front-serverless\\node_modules\\@hapi\\call\\lib\\segment.js:47:14)\n    at internals.Router.add (C:\\xampp\\htdocs\\Front-react-bostrap-vite\\api-front-serverless\\node_modules\\@hapi\\call\\lib\\index.js:65:16)\n    at internals.Server._addRoute (C:\\xampp\\htdocs\\Front-react-bostrap-vite\\api-front-serverless\\node_modules\\@hapi\\hapi\\lib\\server.js:529:46)\n    at internals.Server.route (C:\\xampp\\htdocs\\Front-react-bostrap-vite\\api-front-serverless\\node_modules\\@hapi\\hapi\\lib\\server.js:518:22)\n    at HttpServer.createRoutes (file:///C:/xampp/htdocs/Front-react-bostrap-vite/api-front-serverless/node_modules/serverless-offline/src/events/http/HttpServer.js:1121:18)\n    at #createEvent (file:///C:/xampp/htdocs/Front-react-bostrap-vite/api-front-serverless/node_modules/serverless-offline/src/events/http/Http.js:41:22)\n    at file:///C:/xampp/htdocs/Front-react-bostrap-vite/api-front-serverless/node_modules/serverless-offline/src/events/http/Http.js:46:24\n    at Array.forEach (<anonymous>)\n    at Http.create (file:///C:/xampp/htdocs/Front-react-bostrap-vite/api-front-serverless/node_modules/serverless-offline/src/events/http/Http.js:45:12)\n    at #createHttp (file:///C:/xampp/htdocs/Front-react-bostrap-vite/api-front-serverless/node_modules/serverless-offline/src/ServerlessOffline.js:201:16)"
+    },
+    "serviceRawFile": "service: serverless-cms\r\n\r\nprovider:\r\n  name: aws\r\n  runtime: nodejs14.x\r\n  apiGateway:\r\n    shouldStartNameWithService: true\r\n\r\nfunctions:\r\n  app:\r\n    handler: server.handler\r\n    events:\r\n      - http:\r\n          path: api/sucursales\r\n          method: get\r\n      - http:\r\n          path: api/bannerHero\r\n          method: get \r\n      - http:\r\n          path: api/configuraciones/home/\r\n          method: get        \r\n      - http:\r\n          path: api/doblePack/{idSucursal}\r\n          method: get\r\n      - http:\r\n          path: api/triplePack/{idSucursal}\r\n          method: get   \r\n      - http:\r\n          path: api/bannerFooter/\r\n          method: get\r\n      - http:\r\n          path: api/fullConnected/\r\n          method: get    \r\n      - http:\r\n          path: api/cardStreaming/\r\n          method: get    \r\n      - http:\r\n          path: api/tv/\r\n          method: get \r\n      - http:\r\n          path: api/permisosSucursal/\r\n          method: get   \r\n      - http:\r\n          path: api/simetricoSucursal/\r\n          method: get \r\n      - http:\r\n          path: api/trivias/\r\n          method: get    \r\n      - http:\r\n          path: api/promoEspecialHome/\r\n          method: get    \r\n      - http:\r\n          path: api/xview/{idSucursal}\r\n          method: get \r\n      - http:\r\n          path: api/extraPromoDisney/\r\n          method: get      \r\n      - http:\r\n          path: api/extraPromoDisney/\r\n          method: get    \r\n      - http:\r\n          path: /{proxy+}\r\n          method: ANY\r\n\r\nplugins:\r\n  - serverless-offline\r\n\r\ncustom:\r\n  serverless-offline:\r\n    port: 3000",
+    "command": [
+      "offline"
+    ],
+    "options": {},
+    "orgId": "ce041518-b3a9-42c7-ab6f-34af26084ad7",
+    "orgName": "webartisan2025",
+    "userId": "PDnw896XfHNGFN9CMV",
+    "userName": "webartisan2025",
+    "serviceProviderAwsAccountId": "415852848650",
+    "serviceProviderAwsCfStackId": null,
+    "serviceProviderAwsCfStackCreated": null,
+    "serviceProviderAwsCfStackUpdated": null,
+    "serviceProviderAwsCfStackStatus": null,
+    "serviceProviderAwsCfStackOutputs": null
   }
 }

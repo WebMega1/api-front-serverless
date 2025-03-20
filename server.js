@@ -82,8 +82,9 @@ app.get('/api/configuraciones/home/', (req, res) => {
 app.get('/api/doblePack/:idSucursal', (req, res) => {
   const { idSucursal } = req.params;
   const query = `SELECT t1.idTarifario, t1.idSucursal, t1.idTipoPaquete, t1.idServicioCable, t1.idTipoRed, t1.velocidadInternet, 
-                  t1.telefonia, t1.precioPromoPaquete, t1.precioNormalPaquete,  t1.velocidadPromo, t1.tiempoVelocidaPromo, t1.tarifaPromocional,  t1.status, t1.created_at, t2.sucursalName, t3.nombreTipoPaquete, t3.tipoPaquete,IFNULL(t4.nameServicioCable,0) AS nameServicioCable, 
-                  t4.textoServicioCable, t5.ruta, t5.archivo , t1.idContrata
+                  t1.telefonia, t1.precioPromoPaquete, t1.precioNormalPaquete,  t1.velocidadPromo, t1.tiempoVelocidaPromo, t1.tarifaPromocional,  
+                  t1.status, t1.created_at, t2.sucursalName, t3.nombreTipoPaquete, t3.tipoPaquete,IFNULL(t4.nameServicioCable,0) AS nameServicioCable, 
+                  t4.textoServicioCable, t5.ruta, t5.archivo , t1.idContrata, t1.tarifaPromocionalTemp, t3.logo
                   FROM tarifario AS t1 
                   LEFT JOIN sucursal AS t2 on t1.idSucursal = t2.idSucursal 
                   LEFT JOIN tipodepaquete AS t3 on t1.idTipoPaquete = t3.idTipoPaquete 
@@ -105,7 +106,7 @@ app.get('/api/triplePack/:idSucursal', (req, res) => {
   const { idSucursal } = req.params;
   const query = `SELECT t1.idTarifario, t1.idSucursal, t1.idTipoPaquete, t1.idServicioCable, t1.idTipoRed, t1.velocidadInternet, 
                   t1.telefonia, t1.precioPromoPaquete, t1.precioNormalPaquete,  t1.velocidadPromo, t1.tiempoVelocidaPromo, t1.tarifaPromocional,  t1.status, t1.created_at, t2.sucursalName, t3.nombreTipoPaquete, t3.tipoPaquete,IFNULL(t4.nameServicioCable,0) AS nameServicioCable, 
-                  t4.textoServicioCable, t5.ruta, t5.archivo , t1.idContrata
+                  t4.textoServicioCable, t5.ruta, t5.archivo , t1.idContrata, t1.tarifaPromocionalTemp, t3.logo
                   FROM tarifario AS t1 
                   LEFT JOIN sucursal AS t2 on t1.idSucursal = t2.idSucursal 
                   LEFT JOIN tipodepaquete AS t3 on t1.idTipoPaquete = t3.idTipoPaquete 
@@ -212,11 +213,7 @@ app.get('/api/simetricoSucursal/', (req, res) => {
 
 // Ruta para obtener los banners de trivias en el home
 app.get('/api/trivias/', (req, res) => {
-  const query = `SELECT t1.*, t2.ruta AS rutaPrincipal , t2.archivo AS archivoPrincipal, t3.ruta AS rutaMovil, t3.archivo AS archivoMovil 
-                FROM triviasconfig as t1
-                LEFT JOIN banners as t2 on t1.idBannerPrincipal = t2.idBanner
-                LEFT JOIN banners as t3 on t1.idBannerMovil = t3.idBanner
-                 WHERE t1.status = 1;`;
+  const query = `SELECT * FROM triviasconfig WHERE status = 1;`;
   connection.query(query, (err, results) => {
     if (err) {
       console.error('Error ejecutando la consulta:', err);
@@ -227,6 +224,111 @@ app.get('/api/trivias/', (req, res) => {
   });
 });
 
+// Ruta para obtener los banners de trivias en el home
+app.get('/api/promoEspecialHome/', (req, res) => {
+  const query = `SELECT * FROM streaming WHERE visibleCardHome = 1; `;
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      res.status(500).send('Error en el servidor fullConnected');
+      return;
+    }
+    res.json(results);
+  });
+});
+
+//Ruta para obtener los datos de xview
+app.get('/api/xview/:idSucursal', (req, res) => {
+  const { idSucursal } = req.params;
+  const query = `SELECT idSucursal, idTipoPaquete, COUNT(*) AS cantidad
+                  FROM tarifario
+                  WHERE idSucursal = ?
+                  GROUP BY idSucursal, idTipoPaquete
+                  ORDER BY idTipoPaquete DESC;`;
+
+  connection.query(query, [idSucursal], (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      return res.status(500).json({ error: 'Error al obtener data del tarifario doblePack' });
+    }
+    res.json(results);
+  });
+});
+
+// Ruta para obtener los banners de trivias en el home
+app.get('/api/extraPromoDisney/', (req, res) => {
+  const query = `SELECT * FROM streaming WHERE nameStreaming LIKE '%disney%'; `;
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      res.status(500).send('Error en el servidor promo disney');
+      return;
+    }
+    res.json(results);
+  });
+});
+
+// Ruta para obtener los banners de trivias en el home
+app.get('/api/extraPromoNetflix/', (req, res) => {
+  const query = `SELECT * FROM streaming WHERE nameStreaming LIKE '%netflix%'; `;
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      res.status(500).send('Error en el servidor netflix promo');
+      return;
+    }
+    res.json(results);
+  });
+});
+
+// Ruta para obtener las promociones que aplican a Amazon Prime
+app.get('/api/extraPromoAmazonPrime/', (req, res) => {
+  const query = `SELECT * FROM streaming WHERE nameStreaming LIKE '%amazon%'; `;
+  connection.query(query, (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      res.status(500).send('Error en el servidor netflix promo');
+      return;
+    }
+    res.json(results);
+  });
+});
+
+// Ruta para obtener los datos de detalle de trivia
+app.get('/api/triviaspreguntas/data', (req, res) => {
+  const { id } = req.query; // Cambiado de req.params a req.query
+  const query = `SELECT * FROM triviaspreguntas WHERE idtriviaConfig = ?;`;
+
+  if (!id) {
+    return res.status(400).json({ error: 'El parámetro id es requerido.' });
+  }
+
+  connection.query(query, [id], (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      return res.status(500).json({ error: 'Error al obtener data trivias' });
+    }
+    res.json(results);
+  });
+});
+
+// Ruta para obtener los datos de detalle de trivia
+app.get('/api/trivias/data', (req, res) => {
+  const { id } = req.query; // Cambiado de req.params a req.query
+  const query = `SELECT * FROM triviasconfig WHERE status = 1 AND urlEndPoint = ?;`;
+
+  if (!id) {
+    return res.status(400).json({ error: 'El parámetro id es requerido.' });
+  }
+
+  connection.query(query, [id], (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      return res.status(500).json({ error: 'Error al obtener data trivias' });
+    }
+    res.json(results);
+  });
+});
 
 // Exporta la aplicación para Serverless
 module.exports.handler = serverless(app);
