@@ -3,6 +3,7 @@ const mysql = require('mysql');
 const serverless = require('serverless-http');
 
 const app = express();
+app.use(express.json()); // Middleware para analizar JSON
 
 // Configuración de la conexión a la base de datos
 const connection = mysql.createConnection({
@@ -329,6 +330,82 @@ app.get('/api/trivias/data', (req, res) => {
     res.json(results);
   });
 });
+
+
+app.post('/api/respuestas', async (req, res) => {
+  const { idTriviaConfig, respuestas, nombreUsuario, telefonoUsuario, numeroContrato, ciudad, nombreEnContrato, edad } = req.body;
+
+  console.log("Cuerpo recibido:", req.body); // Verificar el cuerpo completo
+
+  if (!idTriviaConfig || !respuestas || !nombreUsuario) {
+    return res.status(400).json({ error: 'Faltan datos requeridos.' });
+  }
+
+  try {
+    // Obtener las preguntas desde la base de datos para validar las respuestas correctas
+    const [preguntas] = await connection.query(
+      'SELECT idTriviasPreguntas, tipoPregunta, respuestaCorrecta FROM triviaspreguntas WHERE idtriviaConfig = ?',
+      [idTriviaConfig]
+    );
+
+    console.log("Preguntas obtenidas:", preguntas); // Verificar las preguntas obtenidas
+
+    // Validar las respuestas y agregar el campo `esCorrecta`
+    const respuestasValidadas = respuestas.map((respuesta) => {
+      const pregunta = preguntas.find((p) => p.idTriviasPreguntas === respuesta.idPregunta);
+
+      if (!pregunta) {
+        console.error(`Pregunta no encontrada para idPregunta: ${respuesta.idPregunta}`);
+        throw new Error(`Pregunta no encontrada para idPregunta: ${respuesta.idPregunta}`);
+      }
+
+      let esCorrecta = 0;
+      if (pregunta.tipoPregunta === 1) {
+        // Validar si la respuesta coincide con la respuesta correcta
+        esCorrecta = respuesta.respuesta === pregunta.respuestaCorrecta ? 1 : 0;
+      } else if (pregunta.tipoPregunta === 2) {
+        // Para preguntas abiertas, siempre es correcta
+        esCorrecta = 1;
+      }
+
+      return {
+        ...respuesta,
+        esCorrecta,
+      };
+    });
+
+    console.log("Respuestas validadas:", respuestasValidadas); // Verificar las respuestas validadas
+
+    // Insertar las respuestas en la base de datos
+    const query = `
+      INSERT INTO respuestas (idTriviaConfig, idPregunta, respuesta, esCorrecta, nombreUsuario, telefonoUsuario, numeroContrato, ciudad, nombreEnContrato, edad)
+      VALUES ?
+    `;
+
+    const values = respuestasValidadas.map((respuesta) => [
+      idTriviaConfig,
+      respuesta.idPregunta,
+      respuesta.respuesta,
+      respuesta.esCorrecta,
+      nombreUsuario,
+      telefonoUsuario || null,
+      numeroContrato || null,
+      ciudad || null,
+      nombreEnContrato || null,
+      edad || null,
+    ]);
+
+    console.log("Valores a insertar:", values); // Verificar los valores a insertar
+
+    await connection.query(query, [values]);
+
+    res.json({ message: 'Respuestas guardadas exitosamente.' });
+  } catch (error) {
+    console.error('Error al guardar las respuestas:', error);
+    res.status(500).json({ error: 'Error al guardar las respuestas.' });
+  }
+});
+
 
 // Exporta la aplicación para Serverless
 module.exports.handler = serverless(app);
