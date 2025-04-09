@@ -406,6 +406,43 @@ app.post('/api/respuestas', async (req, res) => {
   }
 });
 
+//Ruta para obtener los datos de paquetesCanales
+app.get('/api/paquetesCanales/:idSucursal', (req, res) => {
+  const { idSucursal } = req.params;
+  const query = `SELECT idSucursal, paquete 
+                  FROM alineacioncanalestemporal
+                  WHERE idSucursal = ?
+                  GROUP BY paquete, idSucursal
+                  ORDER BY idSucursal;`;
+
+  connection.query(query, [idSucursal], (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      return res.status(500).json({ error: 'Error al obtener paquetes canales' });
+    }
+    res.json(results);
+  });
+});
+
+//Ruta para obtener los datos de paquetesCanales
+app.get('/api/canales/:idSucursal', (req, res) => {
+  const { idSucursal } = req.params;
+  const query = `SELECT t1.*, t2.tipocanal as idTipoCanal, t3.tipoCanal 
+                    FROM alineacioncanalestemporal as t1 
+                    LEFT JOIN mega_canales as t2 on t1.canal = t2.nombre
+                    LEFT JOIN mega_tipocanales as t3 on t2.tipocanal = t3.idTipoCanal
+                    WHERE idSucursal = ?
+                    ORDER BY t1.selector;`;
+
+  connection.query(query, [idSucursal], (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      return res.status(500).json({ error: 'Error al obtener canales' });
+    }
+    res.json(results);
+  });
+});
+
 
 // Exporta la aplicación para Serverless
 module.exports.handler = serverless(app);

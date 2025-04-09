@@ -69,7 +69,13 @@ functions:
           method: get 
       - http:
           path: api/respuestas/
-          method: post        
+          method: post     
+      - http:
+          path: api/paquetesCanales/
+          method: get 
+      - http:
+          path: api/canales/
+          method: get           
       - http:
           path: /{proxy+}
           method: ANY
