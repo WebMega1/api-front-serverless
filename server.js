@@ -26,7 +26,6 @@ connection.connect((err) => {
 app.get('/api/sucursales', (req, res) => {
   const query = `SELECT idSucursal, sucursalName, status, latitud, longitud 
                   FROM sucursal   
-                  WHERE status = 1
                   ORDER BY sucursalName ASC`;
   connection.query(query, (err, results) => {
     if (err) {
@@ -443,6 +442,65 @@ app.get('/api/canales/:idSucursal', (req, res) => {
   });
 });
 
+//Ruta para obtener los datos sucursales para el admin panel
+app.get('/api/sucursales/:idSucursal', (req, res) => {
+  const { idSucursal } = req.params;
+  const query = `SELECT idSucursal, sucursalName, status, latitud, longitud 
+                  FROM sucursal   
+                  WHERE idSucursal = ? ;`;
+
+  connection.query(query, [idSucursal], (err, results) => {
+    if (err) {
+      console.error('Error ejecutando la consulta:', err);
+      return res.status(500).json({ error: 'Error al obtener canales' });
+    }
+    res.json(results);
+  });
+});
+
+// Ruta para editar una sucursal
+app.put('/api/sucursales/:id', (req, res) => {
+  const { id } = req.params;
+  const { sucursalName, latitud, longitud } = req.body;
+
+  const query = `
+    UPDATE sucursal
+    SET sucursalName = ?, latitud = ?, longitud = ?
+    WHERE idSucursal = ?
+  `;
+  connection.query(query, [sucursalName, latitud, longitud, id], (err, result) => {
+    if (err) {
+      console.error('Error actualizando la sucursal:', err);
+      return res.status(500).json({ message: 'Error en el servidor' });
+    }
+    res.json({ message: 'Sucursal actualizada correctamente' });
+  });
+});
+// Desactivar sucursal
+app.put('/api/sucursales/borrar/:id', (req, res) => {
+  const { id } = req.params;
+  const query = `UPDATE sucursal SET status = 0 WHERE idSucursal = ?`;
+  connection.query(query, [id], (err, result) => {
+    if (err) {
+      console.error('Error al desactivar:', err);
+      return res.status(500).json({ message: 'Error en el servidor' });
+    }
+    res.json({ message: 'Sucursal desactivada correctamente' });
+  });
+});
+
+// Activar sucursal
+app.put('/api/sucursales/restaurar/:id', (req, res) => {
+  const { id } = req.params;
+  const query = `UPDATE sucursal SET status = 1 WHERE idSucursal = ?`;
+  connection.query(query, [id], (err, result) => {
+    if (err) {
+      console.error('Error al activar:', err);
+      return res.status(500).json({ message: 'Error en el servidor' });
+    }
+    res.json({ message: 'Sucursal activada correctamente' });
+  });
+});
 
 // Exporta la aplicación para Serverless
 module.exports.handler = serverless(app);
